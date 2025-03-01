@@ -1,0 +1,83 @@
+{
+  "cases": [
+    {
+      "name": "1: Default success",
+      "input": {
+        "email": "bob@email.com",
+        "password": "password",
+        "displayName": "Bob",
+        "todos": [
+        ]
+      },
+      "expected": {
+        "errors": []
+      }
+    },
+    {
+      "name": "2: validation logic for email",
+      "input": {
+        "email": "invalid",
+        "password": "password",
+        "displayName": "Bob",
+        "todos": [
+        ]
+      },
+      "expected": {
+        "errors": ["email must contain an @"]
+      }
+    },
+    {
+      "name": "3: aggregation of errors on top level request",
+      "input": {
+        "email": "",
+        "password": "",
+        "displayName": "",
+        "todos": [
+        ]
+      },
+      "expected": {
+        "errors": [
+          "email is missing",
+          "password is missing",
+          "display name is missing"
+        ]
+      }
+    },
+    {
+      "name": "4: Success with todos",
+      "input": {
+        "email": "bob@email.com",
+        "password": "password",
+        "displayName": "Bob",
+        "todos": [
+          {"name": "dishes", "priority": 1},
+          {"name": "laundry", "priority": 2},
+          {"name": "vacuum", "priority": 3}
+        ]
+      },
+      "expected": {
+        "errors": []
+      }
+    },
+    {
+      "name": "5: Aggregation of errors inside nested objects",
+      "input": {
+        "email": "bob@email.com",
+        "password": "password",
+        "displayName": "Bob",
+        "todos": [
+          {"name": "", "priority": 1},
+          {"name": "laundry", "priority": -202},
+          {"name": "", "priority": 3}
+        ]
+      },
+      "expected": {
+        "errors": [
+          "name is missing",
+          "priority must be greater than zero",
+          "name is missing"
+        ]
+      }
+    }
+  ]
+}
