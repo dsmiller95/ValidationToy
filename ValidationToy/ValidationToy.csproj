@@ -11,9 +11,4 @@
       <ProjectReference Include="..\DmansValidator\DmansValidator.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Content Include="ValidationExamples.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
 </Project>

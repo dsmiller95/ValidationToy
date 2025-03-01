@@ -1,85 +1,84 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Text;
-using System.Text.Json;
-using DmansValidator;
+﻿using DmansValidator;
 using ValidationToy;
-
-Console.WriteLine("Hello, World!");
-
-var jsonSettings = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-var testCases = JsonSerializer.Deserialize<ValidationTestCaseExamplesFile>(
-    File.ReadAllText("ValidationExamples.json"), jsonSettings);
-
-if (testCases == null)
-{
-    Console.Error.WriteLine("Failed to parse test cases.");
-    return;
-}
+using ValidationToy.Requests;
+using ValidationToy.Validated;
 
 var validationService = new ValidationService();
 var validator = new CreateUserValidator(validationService);
 
-var divider = "==================================";
-foreach (var testCase in testCases.Cases)
+var defaultSuccess = new CreateUser
 {
-    Console.WriteLine(divider);
-    Console.WriteLine(testCase.Name);
-    Console.WriteLine(divider + "\n");
-    Console.WriteLine("input:\n" + testCase.Input + "\n");
-    
-    var result = validator.Validate(testCase.Input);
-    if (result.IsSuccess)
-    {
-        if (testCase.Expected.Errors.Length == 0)
-        {
-            Console.WriteLine($"Got no errors, expected no errors.");
-        }
-        else
-        {
-            Console.WriteLine($"Got not errors, but expected errors:\n{testCase.Expected.Errors.LinesIndented(4)}");
-        }
-    }
-    else
-    {
-        var errors = result.Error.Select(e => e.Message).ToArray();
-        if (ErrorsMatch(testCase.Expected.Errors, errors))
-        {
-            Console.WriteLine($"Got errors:\n{errors.LinesIndented(4)}");
-        }
-        else
-        {
-            Console.WriteLine($"Got errors:\n{errors.LinesIndented(4)}\nbut expected errors:\n{testCase.Expected.Errors.LinesIndented(4)}");
-        }
-    }
-    Console.WriteLine("\n");
-}
+    Email = "bob@email.com",
+    Password = "password",
+    DisplayName = "Bob",
+    Todos = []
+};
+var validated = validator.Validate(defaultSuccess);
+AssertErrorsMatch(validated, []);
 
-bool ErrorsMatch(string[] expected, string[] actual)
+var invalidEmail = new CreateUser
 {
-    if (expected.Length != actual.Length)
-    {
-        return false;
-    }
+    Email = "invalid",
+    Password = "password",
+    DisplayName = "Bob",
+    Todos = []
+};
+validated = validator.Validate(invalidEmail);
+AssertErrorsMatch(validated, ["email must contain"]);
 
-    var expectedList = new List<string>(expected);
-    foreach (string actualError in actual)
-    {
-        var matchingExpected = expectedList.FirstOrDefault(e => ErrorMatches(e, actualError));
-        if (matchingExpected != null)
-        {
-            expectedList.Remove(matchingExpected);
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    return expectedList.Count == 0;
-}
-
-bool ErrorMatches(string expectedError, string actualError)
+var missingMany = new CreateUser
 {
-    return actualError.ToLower().Contains(expectedError.ToLower());
+    Email = null,
+    Password = "",
+    DisplayName = "",
+    Todos = []
+};
+validated = validator.Validate(missingMany);
+AssertErrorsMatch(validated, [
+    "email is missing",
+    "password is missing", 
+    "display name is missing"
+]);
+
+var successWithTodos = new CreateUser
+{
+    Email = "bob@email.com",
+    Password = "password",
+    DisplayName = "Bob",
+    Todos =
+    [
+        new CreateUserTodo { Name = "dishes", Priority = 1 },
+        new CreateUserTodo { Name = "laundry", Priority = 2 },
+        new CreateUserTodo { Name = "vacuum", Priority = 3 },
+    ],
+};
+validated = validator.Validate(successWithTodos);
+AssertErrorsMatch(validated, []);
+
+var aggregateOfTodoErrors = new CreateUser
+{
+    Email = "bob@email.com",
+    Password = "password",
+    DisplayName = "Bob",
+    Todos =
+    [
+        new CreateUserTodo { Name = "", Priority = 1 },
+        new CreateUserTodo { Name = "laundry", Priority = -22 },
+        new CreateUserTodo { Name = "", Priority = 3 },
+    ],
+};
+validated = validator.Validate(aggregateOfTodoErrors);
+AssertErrorsMatch(validated, [
+    "name is missing",
+    "priority must be greater than zero",
+    "name is missing"
+]);
+
+void AssertErrorsMatch(Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> input, string[] expectedErrors)
+{
+    var actualErrors = input.IsSuccess ? [] : input.Error.Select(e => e.Message).ToArray();
+    if (!OutputHelpers.ErrorsMatch(expectedErrors, actualErrors))
+    {
+        throw new Exception($"Got errors:\n{actualErrors.LinesIndented(4)}\nbut expected errors:\n{expectedErrors.LinesIndented(4)}");
+    }
 }
