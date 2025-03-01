@@ -27,7 +27,7 @@ public class TestUtilities
     
     public static void AssertSuccess<T, TErr>(Result<T, TErr> result, Action<T> assert)
     {
-        Assert.IsTrue(result.IsSuccess);
+        Assert.IsTrue(result.IsSuccess, "Should succeed");
         if (result.IsSuccess)
         {
             assert(result.Value);
@@ -36,7 +36,7 @@ public class TestUtilities
     
     public static void AssertFail<T, TErr>(Result<T, TErr> result, Action<TErr> assert)
     {
-        Assert.IsFalse(result.IsSuccess);
+        Assert.IsFalse(result.IsSuccess, "Should error");
         if (!result.IsSuccess)
         {
             assert(result.Error);
@@ -45,10 +45,10 @@ public class TestUtilities
     
     public static void AssertAnyFail<T, TErr>(Result<T, IReadOnlyList<TErr>> result, Func<TErr, bool> predicate)
     {
-        Assert.IsFalse(result.IsSuccess);
+        Assert.IsFalse(result.IsSuccess, "Should error");
         if (!result.IsSuccess)
         {
-            Assert.IsTrue(result.Error.Any(predicate));
+            Assert.IsTrue(result.Error.Any(predicate), "Should have an error that matches predicate");
         }
     }
 }

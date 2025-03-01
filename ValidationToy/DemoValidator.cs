@@ -8,6 +8,9 @@ public class DemoValidator
 {
     public Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> Validate(CreateUser request)
     {
-        throw new NotImplementedException();
+        var validationContext = new AccumulatingValidationContext();
+        var validated = ValidatedCreateUser.Create(validationContext, request);
+        
+        return validationContext.ToResult(validated);
     }
 }

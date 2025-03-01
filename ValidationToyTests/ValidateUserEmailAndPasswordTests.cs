@@ -36,7 +36,7 @@ public class ValidateUserEmailAndPasswordTests
         
         AssertSuccess(validationResult, succ =>
         {
-            Assert.AreEqual(createUser.Email, succ.Email.Value);
+            Assert.That(succ.Email.Value, Is.EqualTo(createUser.Email));
         });
     }
     
