@@ -16,8 +16,8 @@ public class ValidatedCreateUserTodo
     {
         return new ValidatedCreateUserTodo()
         {
-            Name = StringValidators.NonNullString(context, request.Name, "Name is required."),
-            Priority = GreaterThanZeroInt.Create(context, request.Priority),
+            Name = StringValidators.NonEmptyString(context, request.Name, "Name is missing."),
+            Priority = GreaterThanZeroInt.Create(context, request.Priority, nameof(request.Priority)),
         };
     }
 }

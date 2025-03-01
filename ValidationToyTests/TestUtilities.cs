@@ -22,7 +22,11 @@ public class TestUtilities
 
     public static void AssertFailedWithMessage<T>(Result<T, IReadOnlyList<ValidationError>> result, string anyMessageContains)
     {
-        AssertAnyFail(result, error => error.Message.Contains(anyMessageContains));
+        Assert.IsFalse(result.IsSuccess, "Should error");
+        if (!result.IsSuccess)
+        {
+            Assert.IsTrue(result.Error.Any(error => error.Message.Contains(anyMessageContains)), $"Should have an error message containing '{anyMessageContains}'.Errors:\n{string.Join("\n", result.Error.Select(e => e.Message))}");
+        }
     }
     
     public static void AssertSuccess<T, TErr>(Result<T, TErr> result, Action<T> assert)

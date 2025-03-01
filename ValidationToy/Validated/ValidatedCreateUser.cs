@@ -17,7 +17,7 @@ public class ValidatedCreateUser
         {
             Email = Email.Create(context, request.Email),
             Password = Password.Create(context, request.Password),
-            DisplayName = StringValidators.NonNullString(context, request.DisplayName, "Display name is required."),
+            DisplayName = StringValidators.NonEmptyString(context, request.DisplayName, "Display name is required."),
             Todos = request.Todos.Select(todo => ValidatedCreateUserTodo.Create(context, todo)).ToList()
         };
     }

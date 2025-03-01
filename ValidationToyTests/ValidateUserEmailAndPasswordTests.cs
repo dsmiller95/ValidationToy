@@ -26,6 +26,18 @@ public class ValidateUserEmailAndPasswordTests
     }
 
     [Test]
+    public void ValidateUser_WithMalformedEmail_Fails()
+    {
+        var createUser = GetValidCreateUser();
+        createUser.Email = "garbage";
+
+        var validator = GetValidator();
+        var validationResult = validator.Validate(createUser);
+        
+        AssertFailedWithMessage(validationResult, "Email must contain");
+    }
+
+    [Test]
     public void ValidateUser_WithValidEmail_Succeed()
     {
         var createUser = GetValidCreateUser();
