@@ -4,17 +4,24 @@ using ValidationToy.Validated;
 
 namespace ValidationToy;
 
-public class CreateUserValidator
+public class CreateUserValidator()
 {
-    private readonly IValidationService _validationService;
-
-    public CreateUserValidator(IValidationService validationService)
-    {
-        _validationService = validationService;
-    }
-    
     public Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> Validate(CreateUser request)
     {
-        return _validationService.Validate(context => ValidatedCreateUser.Create(context, request));
+        try
+        {
+            return Result<ValidatedCreateUser, IReadOnlyList<ValidationError>>.Success(
+                this.ValidateWithExceptions(request));
+        }
+        catch (ValidationException e)
+        {
+            return Result<ValidatedCreateUser, IReadOnlyList<ValidationError>>.Fail(e.Errors);
+        }
+    }
+
+    public ValidatedCreateUser ValidateWithExceptions(CreateUser request)
+    {
+        using var context = new AccumulatingThrowingValidationContext();
+        return ValidatedCreateUser.Create(context, request);
     }
 }

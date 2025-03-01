@@ -3,8 +3,8 @@ using ValidationToy;
 using ValidationToy.Requests;
 using ValidationToy.Validated;
 
-var validationService = new ValidationService();
-var validator = new CreateUserValidator(validationService);
+//var validationService = new ValidationService();
+var validator = new CreateUserValidator();
 
 var defaultSuccess = new CreateUser
 {
@@ -73,6 +73,11 @@ AssertErrorsMatch(validated, [
     "priority must be greater than zero",
     "name is missing"
 ]);
+
+async Task CreateAndDontDisposeThing()
+{
+    AccumulatingThrowingValidationContext context = new();
+}
 
 void AssertErrorsMatch(Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> input, string[] expectedErrors)
 {

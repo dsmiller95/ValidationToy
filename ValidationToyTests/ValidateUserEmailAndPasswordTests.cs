@@ -66,7 +66,6 @@ public class ValidateUserEmailAndPasswordTests
 
     private CreateUserValidator GetValidator()
     {
-        var validationService = new ValidationService();
-        return new CreateUserValidator(validationService);
+        return new CreateUserValidator();
     }
 }
