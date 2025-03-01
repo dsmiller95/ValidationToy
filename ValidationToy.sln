@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationToy", "ValidationToy\ValidationToy.csproj", "{4F37D4FC-66FF-4EBE-B210-4631872331FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmansValidator", "DmansValidator\DmansValidator.csproj", "{9005C9D8-F474-4F1F-9710-D6FB487CF356}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F37D4FC-66FF-4EBE-B210-4631872331FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F37D4FC-66FF-4EBE-B210-4631872331FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F37D4FC-66FF-4EBE-B210-4631872331FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F37D4FC-66FF-4EBE-B210-4631872331FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9005C9D8-F474-4F1F-9710-D6FB487CF356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9005C9D8-F474-4F1F-9710-D6FB487CF356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9005C9D8-F474-4F1F-9710-D6FB487CF356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9005C9D8-F474-4F1F-9710-D6FB487CF356}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
