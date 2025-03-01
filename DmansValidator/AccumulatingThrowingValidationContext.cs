@@ -2,7 +2,6 @@ namespace DmansValidator;
 
 public class AccumulatingThrowingValidationContext : IValidationContext, IDisposable
 {
-
     public List<ValidationError> Errors { get; } = new List<ValidationError>();
 
     public T Fail<T>(string message)
@@ -18,12 +17,7 @@ public class AccumulatingThrowingValidationContext : IValidationContext, IDispos
 
     public void Dispose()
     {
-        ReleaseUnmanagedResources();
         GC.SuppressFinalize(this);
-    }
-    
-    private void ReleaseUnmanagedResources()
-    {
         if (Errors.Any())
         {
             throw new ValidationException(Errors);
@@ -32,6 +26,6 @@ public class AccumulatingThrowingValidationContext : IValidationContext, IDispos
 
     ~AccumulatingThrowingValidationContext()
     {
-        ReleaseUnmanagedResources();
+        throw new InvalidOperationException("Validation context was not disposed. Validation context must be disposed in all cases.");
     }
 }

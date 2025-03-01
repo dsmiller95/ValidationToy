@@ -74,9 +74,23 @@ AssertErrorsMatch(validated, [
     "name is missing"
 ]);
 
+Console.WriteLine("trying to throw from inside a finalizer");
+for(int i = 0; i < 10_000; i++)
+{
+    Console.Write(".");
+    if(i % 100 == 99)
+    {
+        Console.WriteLine();
+        GC.Collect();
+    }
+    await CreateAndDontDisposeThing();
+}
+
 async Task CreateAndDontDisposeThing()
 {
     AccumulatingThrowingValidationContext context = new();
+    context.Fail("failed");
+    await Task.Delay(TimeSpan.FromSeconds(0.001));
 }
 
 void AssertErrorsMatch(Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> input, string[] expectedErrors)
