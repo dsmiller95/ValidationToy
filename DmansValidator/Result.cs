@@ -2,20 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DmansValidator;
 
-public static class Result
-{
-    public static Result<T, TError> Success<T, TError>(T value)
-    {
-        return Result<T, TError>.Success(value);
-    }
-    
-    public static Result<T, TError> Fail<T, TError>(TError error)
-    {
-
-        return Result<T, TError>.Fail(error);
-    }
-}
-
 public class Result<T,TError>
 {
     public T? Value { get; private init; }

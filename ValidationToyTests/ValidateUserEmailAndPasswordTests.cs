@@ -1,6 +1,5 @@
+using DmansValidator;
 using ValidationToy;
-using ValidationToy.Requests;
-using ValidationToy.Validated;
 using static ValidationToyTests.TestUtilities;
 
 namespace ValidationToyTests;
@@ -65,8 +64,9 @@ public class ValidateUserEmailAndPasswordTests
         AssertFailedWithMessage(validationResult, "Password is missing.");
     }
 
-    private DemoValidator GetValidator()
+    private CreateUserValidator GetValidator()
     {
-        return new DemoValidator();
+        var validationService = new ValidationService();
+        return new CreateUserValidator(validationService);
     }
 }

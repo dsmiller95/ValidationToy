@@ -12,9 +12,6 @@ public class Email
     {
         if (string.IsNullOrEmpty(value))
         {
-            // potential footgun: what if we return a null value from here but then we need to use that
-            //  value later on, as part of validation? Maybe the validation context needs to catch null
-            //  reference excpetions too, just in case?
             return context.Fail<Email>("Email is missing.");
         }
         
