@@ -42,6 +42,28 @@ public class ValidateTodosTests
         
         AssertFailedWithMessage(validationResult, "Name is missing.");
     }
+    
+    
+    [Test]
+    public void ValidateCreateUserTodos_WithMultipleEmptyNames_AndNegativePriorities_Fails_WithMultipleErrors()
+    {
+        var createUser = GetValidCreateUser();
+        createUser.Todos = 
+        [
+            new CreateUserTodo { Name = "", Priority = 1 },
+            new CreateUserTodo { Name = "", Priority = 2 },
+            new CreateUserTodo { Name = "", Priority = 55 },
+            new CreateUserTodo { Name = "bob", Priority = -33 },
+        ];
+
+        var validator = GetValidator();
+        var validationResult = validator.Validate(createUser);
+        
+        AssertFailedWithMessages(validationResult, 
+            "Name is missing", "Name is missing", "Name is missing",
+            "must be greater than zero"
+            );
+    }
 
     private DemoValidator GetValidator()
     {
