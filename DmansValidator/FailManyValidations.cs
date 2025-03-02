@@ -1,6 +1,6 @@
 namespace DmansValidator;
 
-public class AccumulatingValidationContext : IValidationContext, IDisposable
+public class FailManyValidations : IFailValidation, IDisposable
 {
     public List<ValidationError> Errors { get; } = new List<ValidationError>();
 
@@ -24,7 +24,7 @@ public class AccumulatingValidationContext : IValidationContext, IDisposable
         }
     }
 
-    ~AccumulatingValidationContext()
+    ~FailManyValidations()
     {
         throw new InvalidOperationException("Validation context was not disposed. Validation context must be disposed in all cases.");
     }

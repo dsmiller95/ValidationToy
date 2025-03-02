@@ -4,11 +4,11 @@ namespace ValidationToy.Validators;
 
 public class StringValidators
 {
-    public static string NonEmptyString(IValidationContext context, string? value, string errorMessage)
+    public static string NonEmptyString(IFailValidation fail, string? value, string errorMessage)
     {
         if (string.IsNullOrEmpty(value))
         {
-            context.Fail(errorMessage);
+            fail.Fail(errorMessage);
         }
 
         return string.Empty;

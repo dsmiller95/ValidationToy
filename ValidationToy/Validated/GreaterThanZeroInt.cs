@@ -8,11 +8,11 @@ public class GreaterThanZeroInt
 
     public required int Value { get; set; }
     
-    public static GreaterThanZeroInt Create(IValidationContext context, int value, string attributeName)
+    public static GreaterThanZeroInt Create(IFailValidation fail, int value, string attributeName)
     {
         if (value <= 0)
         {
-            return context.Fail<GreaterThanZeroInt>($"{attributeName} must be greater than zero.");
+            return fail.Fail<GreaterThanZeroInt>($"{attributeName} must be greater than zero.");
         }
         
         return new GreaterThanZeroInt

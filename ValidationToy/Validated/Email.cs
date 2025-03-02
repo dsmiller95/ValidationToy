@@ -8,16 +8,16 @@ public class Email
 
     public required string Value { get; set; }
 
-    public static Email Create(IValidationContext context, string? value)
+    public static Email Create(IFailValidation fail, string? value)
     {
         if (string.IsNullOrEmpty(value))
         {
-            return context.Fail<Email>("Email is missing.");
+            return fail.Fail<Email>("Email is missing.");
         }
         
         if(value.Contains("@") == false)
         {
-            return context.Fail<Email>("Email must contain an @ symbol.");
+            return fail.Fail<Email>("Email must contain an @ symbol.");
         }
 
         return new Email()

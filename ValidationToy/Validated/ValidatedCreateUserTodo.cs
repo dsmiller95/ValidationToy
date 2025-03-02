@@ -11,12 +11,12 @@ public class ValidatedCreateUserTodo
     public required string Name { get; set; }
     public required GreaterThanZeroInt Priority { get; set; }
     
-    public static ValidatedCreateUserTodo Create(IValidationContext context, CreateUserTodo request)
+    public static ValidatedCreateUserTodo Create(IFailValidation fail, CreateUserTodo request)
     {
         return new ValidatedCreateUserTodo()
         {
-            Name = StringValidators.NonEmptyString(context, request.Name, "Name is missing."),
-            Priority = GreaterThanZeroInt.Create(context, request.Priority, nameof(request.Priority)),
+            Name = StringValidators.NonEmptyString(fail, request.Name, "Name is missing."),
+            Priority = GreaterThanZeroInt.Create(fail, request.Priority, nameof(request.Priority)),
         };
     }
 }

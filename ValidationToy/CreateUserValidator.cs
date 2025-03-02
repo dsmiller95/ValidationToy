@@ -22,14 +22,14 @@ public class CreateUserValidator()
     public ValidatedCreateUser ValidateWithExceptions(CreateUser request)
     {
         // on dispose, context throws exception containing -all- errors
-        using var context = new AccumulatingValidationContext();
+        using var context = new FailManyValidations();
         return ValidatedCreateUser.Create(context, request);
     }
     
     public ValidatedCreateUser ValidateWithException(CreateUser request)
     {
         // on first error, context throws exception
-        var context = new ValidationContext();
+        var context = new FailValidation();
         return ValidatedCreateUser.Create(context, request);
     }
 }
