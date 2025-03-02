@@ -88,7 +88,7 @@ for(int i = 0; i < 10_000; i++)
 
 async Task CreateAndDontDisposeThing()
 {
-    FailManyValidations context = new();
+    ThrowManyValidationFailures context = new();
     context.Fail("failed");
     await Task.Delay(TimeSpan.FromSeconds(0.001));
 }
