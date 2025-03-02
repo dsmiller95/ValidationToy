@@ -1,6 +1,6 @@
 using DmansValidator;
+using ValidationToy.CommonValidations;
 using ValidationToy.Requests;
-using ValidationToy.Validators;
 
 namespace ValidationToy.Validated;
 
@@ -15,6 +15,16 @@ public class ValidatedCreateUser
     
     public static ValidatedCreateUser Create(IFailValidation fail, ValidateCreateUserContext context, CreateUser request)
     {
+        if(context.DisplayNameAlreadyExists)
+        {
+            fail.Fail("Name already in use");
+        }
+        
+        Rules.MustBeUnique(
+            fail, 
+            request.Todos.Select(todo => todo.Priority).ToList(),
+            "Priorities must be unique");
+        
         return new ValidatedCreateUser()
         {
             Email = Email.Create(fail, request.Email),

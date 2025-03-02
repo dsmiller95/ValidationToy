@@ -1,6 +1,6 @@
 using DmansValidator;
 
-namespace ValidationToy.Validators;
+namespace ValidationToy.CommonValidations;
 
 public class StringValidators
 {
