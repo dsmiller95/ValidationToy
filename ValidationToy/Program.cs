@@ -3,11 +3,6 @@ using ValidationToy;
 using ValidationToy.Requests;
 using ValidationToy.Validated;
 
-//var validationService = new ValidationService();
-// TODO: create context per-test-case
-var context = ValidateCreateUserContext.CreateDefaultSuccess();
-var validator = new CreateUserValidator(context);
-
 var defaultSuccess = new CreateUser
 {
     Email = "bob@email.com",
@@ -15,8 +10,10 @@ var defaultSuccess = new CreateUser
     DisplayName = "Bob",
     Todos = []
 };
-var validated = validator.ValidateToResult(defaultSuccess);
-AssertErrorsMatch(validated, []);
+var defaultSuccessContext = ValidateCreateUserContext.CreateDefaultSuccess();
+var validateResult = ReturnManyValidationFailures.Validate(fail => 
+    ValidatedCreateUser.Create(fail, defaultSuccessContext, defaultSuccess));
+AssertTrue(validateResult.IsSuccess);
 
 var invalidEmail = new CreateUser
 {
@@ -25,8 +22,10 @@ var invalidEmail = new CreateUser
     DisplayName = "Bob",
     Todos = []
 };
-validated = validator.ValidateToResult(invalidEmail);
-AssertErrorsMatch(validated, ["email must contain"]);
+validateResult = ReturnManyValidationFailures.Validate(fail => 
+    ValidatedCreateUser.Create(fail, defaultSuccessContext, invalidEmail));
+AssertFalse(validateResult.IsSuccess);
+AssertErrorsMatch(validateResult, ["email must contain"]);
 
 var missingMany = new CreateUser
 {
@@ -35,8 +34,10 @@ var missingMany = new CreateUser
     DisplayName = "",
     Todos = []
 };
-validated = validator.ValidateToResult(missingMany);
-AssertErrorsMatch(validated, [
+validateResult = ReturnManyValidationFailures.Validate(fail => 
+    ValidatedCreateUser.Create(fail, defaultSuccessContext, missingMany));
+AssertFalse(validateResult.IsSuccess);
+AssertErrorsMatch(validateResult, [
     "email is missing",
     "password is missing", 
     "display name is missing"
@@ -54,8 +55,9 @@ var successWithTodos = new CreateUser
         new CreateUserTodo { Name = "vacuum", Priority = 3 },
     ],
 };
-validated = validator.ValidateToResult(successWithTodos);
-AssertErrorsMatch(validated, []);
+validateResult = ReturnManyValidationFailures.Validate(fail => 
+    ValidatedCreateUser.Create(fail, defaultSuccessContext, successWithTodos));
+AssertTrue(validateResult.IsSuccess);
 
 var aggregateOfTodoErrors = new CreateUser
 {
@@ -64,17 +66,23 @@ var aggregateOfTodoErrors = new CreateUser
     DisplayName = "Bob",
     Todos =
     [
-        new CreateUserTodo { Name = "", Priority = 1 },
+        new CreateUserTodo { Name = "", Priority = -22 },
         new CreateUserTodo { Name = "laundry", Priority = -22 },
         new CreateUserTodo { Name = "", Priority = 3 },
     ],
 };
-validated = validator.ValidateToResult(aggregateOfTodoErrors);
-AssertErrorsMatch(validated, [
+validateResult = ReturnManyValidationFailures.Validate(fail => 
+    ValidatedCreateUser.Create(fail, defaultSuccessContext, aggregateOfTodoErrors));
+AssertFalse(validateResult.IsSuccess);
+AssertErrorsMatch(validateResult, [
+    "priority must be unique",
     "name is missing",
+    "priority must be greater than zero",
     "priority must be greater than zero",
     "name is missing"
 ]);
+
+
 
 Console.WriteLine("trying to throw from inside a finalizer");
 for(int i = 0; i < 10_000; i++)
@@ -95,11 +103,26 @@ async Task CreateAndDontDisposeThing()
     await Task.Delay(TimeSpan.FromSeconds(0.001));
 }
 
-void AssertErrorsMatch(Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> input, string[] expectedErrors)
+void AssertErrorsMatch(ValidationResult<ValidatedCreateUser> input, string[] expectedErrors)
 {
-    var actualErrors = input.IsSuccess ? [] : input.Error.Select(e => e.Message).ToArray();
+    var actualErrors = input.IsSuccess ? [] : input.Errors.Select(e => e.Message).ToArray();
     if (!OutputHelpers.ErrorsMatch(expectedErrors, actualErrors))
     {
         throw new Exception($"Got errors:\n{actualErrors.LinesIndented(4)}\nbut expected errors:\n{expectedErrors.LinesIndented(4)}");
+    }
+}
+
+void AssertTrue(bool condition)
+{
+    if (!condition)
+    {
+        throw new Exception($"Expected true, but got false");
+    }
+}
+void AssertFalse(bool condition)
+{
+    if (condition)
+    {
+        throw new Exception($"Expected false, but got true");
     }
 }

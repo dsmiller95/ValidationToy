@@ -23,7 +23,7 @@ public class ValidatedCreateUser
         Rules.MustBeUnique(
             fail, 
             request.Todos.Select(todo => todo.Priority).ToList(),
-            "Priorities must be unique");
+            "Priorities must be unique.");
         
         return new ValidatedCreateUser()
         {

@@ -6,7 +6,7 @@ namespace ValidationToy;
 
 public class CreateUserValidator(ValidateCreateUserContext context)
 {
-    public Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> ValidateToResult(CreateUser request)
+    public ValidationResult<ValidatedCreateUser> ValidateToResult(CreateUser request)
     {
         return ReturnManyValidationFailures.Validate(fail => ValidatedCreateUser.Create(fail, context, request));
     }

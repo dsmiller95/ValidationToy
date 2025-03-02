@@ -40,7 +40,7 @@ public class ValidateComplexRulesTests
             ValidatedCreateUser.Create(fail, validationContext, createUser));
         
         AssertFailedWithMessages(validationResult, 
-            "Priorities must be unique"
+            "Priorities must be unique."
         );
     }
 }
