@@ -66,6 +66,6 @@ public class ValidateUserEmailAndPasswordTests
 
     private CreateUserValidator GetValidator()
     {
-        return new CreateUserValidator();
+        return new CreateUserValidator(ValidateCreateUserContext.CreateDefaultSuccess());
     }
 }

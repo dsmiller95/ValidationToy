@@ -66,6 +66,6 @@ public class ValidateTodosTests
     
     private CreateUserValidator GetValidator()
     {
-        return new CreateUserValidator();
+        return new CreateUserValidator(ValidateCreateUserContext.CreateDefaultSuccess());
     }
 }

@@ -13,7 +13,7 @@ public class ValidatedCreateUser
     public required string DisplayName { get; set; }
     public required List<ValidatedCreateUserTodo> Todos { get; set; }
     
-    public static ValidatedCreateUser Create(IFailValidation fail, CreateUser request)
+    public static ValidatedCreateUser Create(IFailValidation fail, ValidateCreateUserContext context, CreateUser request)
     {
         return new ValidatedCreateUser()
         {

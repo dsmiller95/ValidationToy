@@ -4,7 +4,9 @@ using ValidationToy.Requests;
 using ValidationToy.Validated;
 
 //var validationService = new ValidationService();
-var validator = new CreateUserValidator();
+// TODO: create context per-test-case
+var context = ValidateCreateUserContext.CreateDefaultSuccess();
+var validator = new CreateUserValidator(context);
 
 var defaultSuccess = new CreateUser
 {
