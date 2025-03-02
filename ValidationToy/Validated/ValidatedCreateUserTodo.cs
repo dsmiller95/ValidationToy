@@ -15,7 +15,7 @@ public class ValidatedCreateUserTodo
     {
         return new ValidatedCreateUserTodo()
         {
-            Name = StringValidators.NonEmptyString(fail, request.Name, "Name is missing."),
+            Name = StringValidators.NonEmptyString(fail, request.Name, nameof(request.Name)),
             Priority = GreaterThanZeroInt.Create(fail, request.Priority, nameof(request.Priority)),
         };
     }

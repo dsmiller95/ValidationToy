@@ -29,7 +29,7 @@ public class ValidatedCreateUser
         {
             Email = Email.Create(fail, request.Email),
             Password = Password.Create(fail, request.Password),
-            DisplayName = StringValidators.NonEmptyString(fail, request.DisplayName, "Display name is missing."),
+            DisplayName = StringValidators.NonEmptyString(fail, request.DisplayName,  "Display name"),
             Todos = request.Todos.Select(todo => ValidatedCreateUserTodo.Create(fail, todo)).ToList()
         };
     }
