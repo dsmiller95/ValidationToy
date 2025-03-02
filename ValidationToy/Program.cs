@@ -13,7 +13,7 @@ var defaultSuccess = new CreateUser
     DisplayName = "Bob",
     Todos = []
 };
-var validated = validator.Validate(defaultSuccess);
+var validated = validator.ValidateToResult(defaultSuccess);
 AssertErrorsMatch(validated, []);
 
 var invalidEmail = new CreateUser
@@ -23,7 +23,7 @@ var invalidEmail = new CreateUser
     DisplayName = "Bob",
     Todos = []
 };
-validated = validator.Validate(invalidEmail);
+validated = validator.ValidateToResult(invalidEmail);
 AssertErrorsMatch(validated, ["email must contain"]);
 
 var missingMany = new CreateUser
@@ -33,7 +33,7 @@ var missingMany = new CreateUser
     DisplayName = "",
     Todos = []
 };
-validated = validator.Validate(missingMany);
+validated = validator.ValidateToResult(missingMany);
 AssertErrorsMatch(validated, [
     "email is missing",
     "password is missing", 
@@ -52,7 +52,7 @@ var successWithTodos = new CreateUser
         new CreateUserTodo { Name = "vacuum", Priority = 3 },
     ],
 };
-validated = validator.Validate(successWithTodos);
+validated = validator.ValidateToResult(successWithTodos);
 AssertErrorsMatch(validated, []);
 
 var aggregateOfTodoErrors = new CreateUser
@@ -67,7 +67,7 @@ var aggregateOfTodoErrors = new CreateUser
         new CreateUserTodo { Name = "", Priority = 3 },
     ],
 };
-validated = validator.Validate(aggregateOfTodoErrors);
+validated = validator.ValidateToResult(aggregateOfTodoErrors);
 AssertErrorsMatch(validated, [
     "name is missing",
     "priority must be greater than zero",
@@ -88,7 +88,7 @@ for(int i = 0; i < 10_000; i++)
 
 async Task CreateAndDontDisposeThing()
 {
-    AccumulatingThrowingValidationContext context = new();
+    AccumulatingValidationContext context = new();
     context.Fail("failed");
     await Task.Delay(TimeSpan.FromSeconds(0.001));
 }

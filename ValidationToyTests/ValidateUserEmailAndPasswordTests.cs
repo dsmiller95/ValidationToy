@@ -19,7 +19,7 @@ public class ValidateUserEmailAndPasswordTests
         createUser.Email = null;
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Email is missing.");
     }
@@ -31,7 +31,7 @@ public class ValidateUserEmailAndPasswordTests
         createUser.Email = "garbage";
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Email must contain");
     }
@@ -43,7 +43,7 @@ public class ValidateUserEmailAndPasswordTests
         createUser.Email = "Someemal@home.com";
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertSuccess(validationResult, succ =>
         {
@@ -59,7 +59,7 @@ public class ValidateUserEmailAndPasswordTests
         createUser.Password = null;
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Password is missing.");
     }

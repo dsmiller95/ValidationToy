@@ -1,6 +1,6 @@
 namespace DmansValidator;
 
-internal class AccumulatingValidationContext : IValidationContext
+public class AccumulatingValidationContext : IValidationContext, IDisposable
 {
     public List<ValidationError> Errors { get; } = new List<ValidationError>();
 
@@ -13,5 +13,19 @@ internal class AccumulatingValidationContext : IValidationContext
     public void Fail(string message)
     {
         Errors.Add(new ValidationError(message));
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        if (Errors.Any())
+        {
+            throw new ValidationException(Errors);
+        }
+    }
+
+    ~AccumulatingValidationContext()
+    {
+        throw new InvalidOperationException("Validation context was not disposed. Validation context must be disposed in all cases.");
     }
 }

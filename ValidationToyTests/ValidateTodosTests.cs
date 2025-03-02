@@ -20,7 +20,7 @@ public class ValidateTodosTests
         ];
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessages(validationResult, 
             "Name is missing", "Name is missing", "Name is missing",
@@ -35,7 +35,7 @@ public class ValidateTodosTests
         createUser.Todos[0].Priority = -1;
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Priority must be greater than zero.");
     }
@@ -47,7 +47,7 @@ public class ValidateTodosTests
         createUser.Todos[0].Name = null;
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Name is missing.");
     }
@@ -59,7 +59,7 @@ public class ValidateTodosTests
         createUser.Todos[0].Name = "";
 
         var validator = GetValidator();
-        var validationResult = validator.Validate(createUser);
+        var validationResult = validator.ValidateToResult(createUser);
         
         AssertFailedWithMessage(validationResult, "Name is missing.");
     }

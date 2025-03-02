@@ -6,7 +6,7 @@ namespace ValidationToy;
 
 public class CreateUserValidator()
 {
-    public Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> Validate(CreateUser request)
+    public Result<ValidatedCreateUser, IReadOnlyList<ValidationError>> ValidateToResult(CreateUser request)
     {
         try
         {
@@ -21,7 +21,15 @@ public class CreateUserValidator()
 
     public ValidatedCreateUser ValidateWithExceptions(CreateUser request)
     {
-        using var context = new AccumulatingThrowingValidationContext();
+        // on dispose, context throws exception containing -all- errors
+        using var context = new AccumulatingValidationContext();
+        return ValidatedCreateUser.Create(context, request);
+    }
+    
+    public ValidatedCreateUser ValidateWithException(CreateUser request)
+    {
+        // on first error, context throws exception
+        var context = new ValidationContext();
         return ValidatedCreateUser.Create(context, request);
     }
 }
