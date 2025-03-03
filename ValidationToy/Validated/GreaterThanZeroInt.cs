@@ -10,8 +10,7 @@ public class GreaterThanZeroInt
     
     public static GreaterThanZeroInt Create(IFailValidation fail, int value, string attributeName)
     {
-        if (value <= 0)
-            return fail.Fail<GreaterThanZeroInt>($"{attributeName} must be greater than zero.");
+        if (value <= 0) return fail.Fail<GreaterThanZeroInt>($"{attributeName} must be greater than zero.");
         
         return new GreaterThanZeroInt { Value = value };
     }

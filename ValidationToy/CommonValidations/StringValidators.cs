@@ -9,8 +9,9 @@ public class StringValidators
         if (string.IsNullOrEmpty(value))
         {
             fail.Fail($"{attributeName} is missing.");
+            return string.Empty;
         }
 
-        return string.Empty;
+        return value;
     }
 }
